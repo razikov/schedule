@@ -1,0 +1,123 @@
+<?php
+namespace app\models;
+
+use yii\db\ActiveRecord;
+use Yii;
+use DateTime;
+
+class ReservationClassroom extends ActiveRecord
+{
+    public $_theme;
+
+    public function setCompositeKey($id_course, $id_order)
+    {
+        $courseThemes = InfoCourseThemes::findOne([
+            'IDCourse' => $id_course,
+            'Order1' => $id_order,
+        ]);
+        if (!$courseThemes) {
+//            throw "Тема курса не найдена";
+            return null;
+        } else {
+            $this->_theme = $courseThemes->theme;
+        }
+        $this->id_theme = self::generateId($id_course, $id_order);
+        $this->date_at = $courseThemes->Date1;
+        $this->startTime = $courseThemes->time;
+        $this->endTime = $courseThemes->endTime;
+        return $this;
+    }
+    
+    public static function generateId($id_course, $id_order)
+    {
+        return implode('-', [$id_course, $id_order]);
+    }
+    
+    public function getCompositeKey()
+    {
+        $value = explode('-', $this->id_theme);
+        return [
+            'IDCourse' => $value[0],
+            'Order1' => isset($value[1]) ? $value[1] : null,
+        ];
+    }
+    
+    public function afterFind()
+    {
+        $compositeKey = $this->getCompositeKey();
+        $courseThemes = InfoCourseThemes::findOne([
+            'IDCourse' => $compositeKey['IDCourse'],
+            'Order1' => $compositeKey['Order1'],
+        ]);
+        if ($courseThemes) {
+            $this->_theme = $courseThemes->theme;
+        }
+    }
+
+    public function rules()
+    {
+        return [
+            [['id_theme', 'classroom', 'date_at', 'time_start_at'], 'required'],
+        ];
+    }
+    
+    public function attributeLabels()
+    {
+        return [
+            'id' => Yii::t('app', '#'),
+            'id_theme' => Yii::t('app', 'Занятие'),
+            'themeName' => Yii::t('app', 'Занятие'),
+            'classroom' => Yii::t('app', 'Аудитория'),
+            'date_at' => Yii::t('app', 'Дата'),
+            'date' => Yii::t('app', 'Дата'),
+            'time_start_at' => Yii::t('app', '(Время) С'),
+            'startTime' => Yii::t('app', '(Время) С'),
+            'time_end_at' => Yii::t('app', '(Время) По'),
+            'endTime' => Yii::t('app', '(Время) По'),
+        ];
+    }
+    
+    public function getThemeName()
+    {
+        return \yii\helpers\ArrayHelper::getValue($this, ['_theme', 'Name'], 'Название темы не найдено');
+    }
+    
+    public function setDate($value)
+    {
+        $this->date_at = DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d');
+        return $this;
+    }
+    
+    public function getDate()
+    {
+        return $this->date_at ? DateTime::createFromFormat('Y-m-d', $this->date_at)->format('d.m.Y') : null;
+    }
+    
+    public function setStartTime($value)
+    {
+        $this->time_start_at = DateTime::createFromFormat('H:i', $value)->format('H:i:s');
+        return $this;
+    }
+    
+    public function getStartTime()
+    {
+        return $this->time_start_at ? DateTime::createFromFormat('H:i:s', $this->time_start_at)->format('H:i') : null;
+    }
+    
+    public function setEndTime($value)
+    {
+        $this->time_end_at = DateTime::createFromFormat('H:i', $value)->format('H:i:s');
+        return $this;
+    }
+    
+    public function getEndTime()
+    {
+        return $this->time_end_at ? DateTime::createFromFormat('H:i:s', $this->time_end_at)->format('H:i') : null;
+    }
+
+    public static function tableName()
+    {
+        return '{{%rasp_reservation}}';
+    }
+
+}

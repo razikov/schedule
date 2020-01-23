@@ -1,0 +1,12 @@
+{
+  "name": "schedule",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/razikov/schedule.git",
+  "author": "Разиков Алексей <razikov88@yandex.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap-select": "^1.13.12",
+    "jquery-datetimepicker": "^2.5.21"
+  }
+}
