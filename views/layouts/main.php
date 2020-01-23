@@ -56,7 +56,7 @@ $now = new DateTimeImmutable();
                         [
                             'label' => \Yii::t('app', 'Расписание'),
                             'url' => ['/schedule-info/presentation'],
-                            'visible' => true,
+                            'visible' => !Yii::$app->user->isGuest,
                         ],
                         [
                             'label' => \Yii::t('app', 'Карта аудиторий'),
@@ -73,10 +73,10 @@ $now = new DateTimeImmutable();
                         [
                             'label' => \Yii::t('app', 'Список пользователей'),
                             'url' => ['/user/index'],
-                            'visible' => Yii::$app->user->can(User::ROLE_ADMIN),
+                            'visible' => Yii::$app->user->can(User::USER_LIST),
                         ],
                     ],
-                    'visible' => !Yii::$app->user->isGuest,
+                    'visible' => Yii::$app->user->can(User::ROLE_ADMIN),
                 ],
                 [
                     'label' => \Yii::t('app', 'Профиль'),

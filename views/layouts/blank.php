@@ -31,7 +31,12 @@ AppAsset::register($this);
         <?= $content ?>
     </div>
 </div>
-
+<script>
+setTimeout(function(){
+    location.reload();
+    console.log('refresh');
+}, 60000);
+</script>
 <?php $this->endBody() ?>
 </body>
 </html>
