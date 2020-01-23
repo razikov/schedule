@@ -32,16 +32,8 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
-        
-        'schedule_info' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=schedule_info',
-            'username' => 'root',
-            'password' => 'hexrf88',
-            'charset' => 'utf8',
-        ],
-        
+        'db' => [],
+        'schedule_info' => [],
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
             'dateFormat' => 'dd.MM.yyyy',
