@@ -8,8 +8,11 @@
 2. cd ./schedule
 3. composer install
 4. yarn install
-5. развернуть БД и настроить доступ в ./config/_local.php пример есть в ./config/_local.sample.php
-5. ./yii migrate
-6. ./yii rbac/init
-7. ./yii rbac/create-admin-user
-8. use it!
+5. развернуть БД и настроить веб-сервер
+6. настроить приложение:
+    * скопировать и настроить ./config/_local.sample.php в ./config/_local.php
+    * скопировать ./config/index.sample.php в ./web/index.php
+7. ./yii migrate
+8. ./yii rbac/init
+9. ./yii rbac/create-admin-user
+10. use it!

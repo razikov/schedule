@@ -41,6 +41,22 @@ class InfoCourse extends ActiveRecord
         return $this->hasMany(InfoCourseThemes::class, ['IDCourse' => 'ID']);
     }
     
+    public function getClassrooms()
+    {
+//        return ReferenceCourseClassroom::findOne([
+//            'id_course' => $this->ID,
+//        ]);
+        return $this->hasMany(ReferenceCourseClassroom::class, ['id_course' => 'ID']);
+    }
+    
+    public function getClassroom()
+    {
+//        return ReferenceCourseClassroom::findOne([
+//            'id_course' => $this->ID,
+//        ]);
+        return $this->hasOne(ReferenceCourseClassroom::class, ['id_course' => 'ID']);
+    }
+    
     public static function getDb()
     {
         return \Yii::$app->get('schedule_info');

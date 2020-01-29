@@ -5,10 +5,9 @@ namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\RestorePasswordForm;
+use app\models\ChangePasswordForm;
 
 class SiteController extends Controller
 {
@@ -19,7 +18,7 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'except' => [
                     'error', 
-//                    'captcha', 
+                    'captcha', 
                     'login', 
                     'index', 
                     'restore-password', 
@@ -42,10 +41,10 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-//            'captcha' => [
-//                'class' => 'yii\captcha\CaptchaAction',
-//                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-//            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
         ];
     }
 

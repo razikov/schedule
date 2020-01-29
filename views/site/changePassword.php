@@ -4,12 +4,10 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Смена пароля');
-$this->params['breadcrumbs'][] = $this->title;
+//$this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="site-reset-password">
-    <h2 class="page-title"><?= Html::encode($this->title) ?></h2>
-
     <div class="clearfix">
         <div class="col-sm-6 col-sm-offset-3">
             <div class="panel panel-default">

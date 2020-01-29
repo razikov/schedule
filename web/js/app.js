@@ -8,6 +8,12 @@ function showModal(_modal, options) {
     _modal.modal();
     _modal.on("hidden.bs.modal", () => _modal.remove());
     _modal.on("click", ".js-submit", () => submitForm(_modal, options));
+    _modal.on("shown.bs.modal", () => {
+        $("body").addClass("modal-open");
+        if (options.afterShow) {
+            options.afterShow(_modal, options);
+        }
+    });
 }
 
 function processResponse(response, options) {
@@ -61,7 +67,8 @@ function fetchModal(selector, options) {
 }
 
 function bindModal(selector, options) {
-    $(selector).click(function () {
+    $(selector).click(function (e) {
+        e.preventDefault();
         fetchModal(this, options || {});
         return false;
     });
@@ -76,7 +83,7 @@ function datepicker(selector) {
 }
 
 function timepicker(selector) {
-    $(".timepicker", selector).datetimepicker({format: "H:i", lang: "ru", datepicker: false, });
+    $(".timepicker", selector).datetimepicker({format: "H:i", lang: "ru", datepicker: false, step: 15, minTime: "08:00", maxTime: "20:00"});
 }
 
 function datetimepicker(selector) {

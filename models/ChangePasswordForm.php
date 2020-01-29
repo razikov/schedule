@@ -39,7 +39,7 @@ class ChangePasswordForm extends Model
             /** @var User $user */
             if ($user = User::findOne($user_id)) {
                 $user->password_hash = Yii::$app->security->generatePasswordHash($this->password);
-                $user->auth_key = Yii::$app->security->generateRandomString();
+//                $user->auth_key = Yii::$app->security->generateRandomString();
                 if ($user->save() && Token::delete($this->token)) {
                     return true;
                 }

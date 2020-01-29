@@ -49,6 +49,11 @@ $now = new DateTimeImmutable();
                             'visible' => Yii::$app->user->can(User::SCHEDULE_COURSES_LIST),
                         ],
                         [
+                            'label' => \Yii::t('app', 'Расписание'),
+                            'url' => ['/schedule-info/presentation-course'],
+                            'visible' => !Yii::$app->user->isGuest,
+                        ],
+                        [
                             'label' => \Yii::t('app', 'Список занятий'),
                             'url' => ['/schedule-info/themes'],
                             'visible' => Yii::$app->user->can(User::SCHEDULE_THEMES_LIST),

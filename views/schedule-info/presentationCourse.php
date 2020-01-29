@@ -7,6 +7,16 @@ use app\widgets\DatePicker;
 
 $this->title = 'Tests';
 $formatter = Yii::$app->formatter;
+
+$this->registerJs('
+    bindModal(".js-show-modal", {
+        beforeShow: function (_modal) {
+//            selectpicker(_modal);
+//            datepicker(_modal);
+//            timepicker(_modal);
+        }
+    });
+');
 ?>
 <?php if (!Yii::$app->user->isGuest): ?>
 <div>
@@ -47,7 +57,7 @@ $formatter = Yii::$app->formatter;
 <?= ListView::widget([
     'layout' => "{items}\n",
     'dataProvider' => $dataProvider,
-    'itemView' => '_item',
+    'itemView' => '_item_course',
     'options' => [
         'class' => 'list-view list-group list-group-flush'
     ]

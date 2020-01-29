@@ -39,6 +39,12 @@ $this->title = 'Tests';
                 return Yii::$app->formatter->asDate($item->Date1);
             }
         ],
+        [
+            'header' => 'Время',
+            'value' => function($item) {
+                return sprintf("%s - %s", $item->time, $item->endTime);
+            }
+        ],
     ],
 ]); ?>
 

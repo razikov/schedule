@@ -7,6 +7,8 @@ use yii\web\Controller;
 use app\models\InfoCourseSearch;
 use app\models\InfoCourseThemesSearch;
 use app\models\ReservationClassroom;
+use app\models\ReferenceCourseClassroom;
+use \app\models\InfoCourse;
 use app\models\User;
 use yii\web\Response;
 use yii\helpers\Html;
@@ -19,15 +21,15 @@ class ScheduleInfoController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'except' => ['presentation-blank'],
+                'except' => ['presentation-blank', 'presentation-course-blank'],
                 'rules' => [
-                    ['actions' => ['presentation'], 'allow' => true, 'roles' => ["@"]],
-                    ['actions' => ['index'], 'allow' => true, 'roles' => [User::SCHEDULE_COURSES_LIST]],
-                    ['actions' => ['themes', 'themes-modal'], 'allow' => true, 'roles' => [User::SCHEDULE_THEMES_LIST]],
+                    ['actions' => ['presentation', 'presentation-course'], 'allow' => true, 'roles' => ["@"]],
+                    ['actions' => ['index', 'themes-modal', 'course-classroom-modal'], 'allow' => true, 'roles' => [User::SCHEDULE_COURSES_LIST]],
+                    ['actions' => ['themes'], 'allow' => true, 'roles' => [User::SCHEDULE_THEMES_LIST]],
                     ['actions' => ['show'], 'allow' => true, 'roles' => [User::SCHEDULE_CLASSROOM_MAP]],
-                    ['actions' => ['create-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_CREATE]],
-                    ['actions' => ['update-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_UPDATE]],
-                    ['actions' => ['delete-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_DELETE]],
+                    ['actions' => ['create-class', 'create-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_CREATE]],
+                    ['actions' => ['update-class', 'update-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_UPDATE]],
+                    ['actions' => ['delete-class', 'delete-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_DELETE]],
                 ],
             ],
         ];
@@ -78,7 +80,28 @@ class ScheduleInfoController extends Controller
             'dataProvider' => $dataProvider,
             'courseName' => $course->Name ? $course->Name : '',
         ])];
+    }
+    
+    public function actionCourseClassroomModal($courseId)
+    {
+        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
+        $course = InfoCourse::findOne(['ID' => $courseId]);
         
+        if (!$course) {
+            throw new NotFoundHttpException();
+        } else {
+            $searchModel->id_course = $course->ID;
+        }
+        
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        $dataProvider->pagination = false;
+        
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        return ['form' => $this->renderPartial('_modal_course_classroom', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ])];
     }
     
     public function actionPresentation($date = null)
@@ -95,6 +118,38 @@ class ScheduleInfoController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    public function actionPresentationCourse($date = null)
+    {
+        $date = $date ? $date : date("Y-m-d");
+        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
+        $searchModel->date = $date;
+        
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        $dataProvider->pagination = false;
+        
+        return $this->render('presentationCourse', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
+    public function actionPresentationCourseBlank($date = null)
+    {
+        $this->layout = 'blank';
+        $date = $date ? $date : date("Y-m-d");
+        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
+        $searchModel->date = $date;
+        
+        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
+        $dataProvider->pagination = false;
+        
+        return $this->render('presentationCourseBlank', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
     public function actionPresentationBlank($date = null)
     {
         $this->layout = 'blank';
@@ -205,6 +260,54 @@ class ScheduleInfoController extends Controller
         
 //        Yii::$app->response->format = Response::FORMAT_JSON;
 //        return ['success' => (int)$model->delete(), 'errors' => Html::errorSummary($model)];
+    }
+    
+    public function actionCreateRefCourseClass($idCourse)
+    {   
+        $model = new ReferenceCourseClassroom();
+        $course = InfoCourse::findOne(['ID' => $idCourse]);
+        
+        if (!$course) {
+            throw new NotFoundHttpException();
+        } else {
+            $model->id_course = $course->ID;
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return ['model' => $model];
+        } else {
+            return ['form' => $this->renderPartial('_form_ref_course_class', ['model' => $model])];
+        }
+    }
+    
+    public function actionUpdateRefCourseClass($id)
+    {
+        $model = ReferenceCourseClassroom::findOne($id);
+        
+        if (!$model) {
+            throw new NotFoundHttpException();
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return ['model' => $model];
+        } else {
+            return ['form' => $this->renderPartial('_form_ref_course_class', ['model' => $model])];
+        }
+    }
+    
+    public function actionDeleteRefCourseClass($id, $returnUrl)
+    {
+        $model = ReferenceCourseClassroom::findOne($id);
+        
+        if (!$model) {
+            throw new NotFoundHttpException;
+        }
+        
+        $success = $model->delete();
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['model' => $success ? null : $model];
     }
 
 }

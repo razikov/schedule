@@ -31,10 +31,10 @@ $this->title = Yii::t('app', 'Авторизация');
                         'template' => '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>{input}</div>{error}'
                     ])->passwordInput(['class'=>'form-control']) ?>
 
-                    <?= '' /*Yii::t('app', 'Для восстановления пароля перейдите') ?> <?= Html::a(
+                    <?= Yii::t('app', 'Для восстановления пароля перейдите') ?> <?= Html::a(
                         Yii::t('app', 'по ссылке'),
                         ['site/restore-password']
-                    )*/ ?>
+                    ) ?>
 
                     <?= Html::submitButton(
                         Yii::t('app', 'Войти'),

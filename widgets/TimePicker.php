@@ -11,6 +11,7 @@ use app\assets\JqueryDatePickerAsset;
 class TimePicker extends InputWidget
 {
     public $language;
+    public $params = [];
 
     public function init()
     {
@@ -36,11 +37,14 @@ class TimePicker extends InputWidget
         $view = $this->getView();
         JqueryDatePickerAsset::register($view);
         $params = Json::encode(
-            [
-                'format' => 'H:i',
-                'lang' => $this->language,
-                'datepicker' => false,
-            ]
+            array_merge(
+                [
+                    'format' => 'H:i',
+                    'lang' => $this->language,
+                    'datepicker' => false,
+                ],
+                $this->params
+            )
         );
         $view->registerJs("$('#{$this->options['id']}').datetimepicker({$params});", View::POS_READY);
     }
