@@ -3,16 +3,9 @@
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\widgets\DatePicker;
-use app\widgets\TimePicker;
 use app\widgets\Select;
 use app\models\Classroom;
 
-/**
- * @var $this yii\web\View
- * @var $model app\models\Holding
- * @var $form yii\widgets\ActiveForm
- */
 ?>
 
 <?php Modal::begin([
@@ -29,18 +22,30 @@ use app\models\Classroom;
 ]); ?>
 <?= Html::errorSummary($model) ?>
 <?php $form = ActiveForm::begin(['options' => ['autocomplete' => 'off']]); ?>
-<?= $form->field($model, 'themeName')->textarea([
-    'disabled' => true
-]); ?>
-<?= $form->field($model, 'date')->textInput([
-    'disabled' => true
-]); ?>
-<?= $form->field($model, 'startTime')->textInput([
-    'disabled' => true
-]); ?>
-<?= $form->field($model, 'endTime')->textInput([
-    'disabled' => true
-]); ?>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('divisionName'); ?></label>
+    <?= Html::tag('div', $model->divisionName, ['class' => 'form-control', 'style' => 'height: auto;']); ?>
+</div>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('courseName'); ?></label>
+    <?= Html::tag('div', $model->courseName, ['class' => 'form-control', 'style' => 'height: auto;']); ?>
+</div>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('themeName'); ?></label>
+    <?= Html::tag('div', $model->themeName, ['class' => 'form-control', 'style' => 'height: auto;']); ?>
+</div>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('date'); ?></label>
+    <?= Html::tag('div', $model->date, ['class' => 'form-control']); ?>
+</div>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('startTime'); ?></label>
+    <?= Html::tag('div', $model->startTime, ['class' => 'form-control']); ?>
+</div>
+<div class="form-group">
+    <label class="control-label" for="#"><?= $model->getAttributeLabel('endTime'); ?></label>
+    <?= Html::tag('div', $model->endTime, ['class' => 'form-control disabled']); ?>
+</div>
 <?= $form->field($model, 'classroom')->widget(
     Select::class, [
         'options' => [
@@ -52,6 +57,7 @@ use app\models\Classroom;
         'items' => Classroom::getList()
     ])
 ?>
-<?= $form->field($model, 'id_theme')->hiddenInput()->label(false); ?>
+<?= $form->field($model, 'id_course')->hiddenInput()->label(false); ?>
+<?= $form->field($model, 'id_order')->hiddenInput()->label(false); ?>
 <?php ActiveForm::end(); ?>
 <?php Modal::end() ?>

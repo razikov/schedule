@@ -104,18 +104,28 @@ class ScheduleInfoController extends Controller
         ])];
     }
     
-    public function actionPresentation($date = null)
+    public function actionPresentation($dateAt = null)
     {
-        $date = $date ? $date : date("Y-m-d");
-        $searchModel = new InfoCourseThemesSearch();
-        $searchModel->Date1 = $date;
+        $dateAt = $dateAt ? $dateAt : date("d.m.Y");
+        $date = \DateTime::createFromFormat('d.m.Y', $dateAt);
+        $date = $date->format('Y-m-d');
         
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        $dataProvider->pagination = false;
+        $items = \app\models\Schedule::create($date);
         
         return $this->render('presentation', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'courses' => $items,
+            'dateAt' => $dateAt,
+        ]);
+    }
+    
+    public function actionPresentationBlank()
+    {
+        $this->layout = 'blank';
+        
+        $items = \app\models\Schedule::create(date('Y-m-d'));
+        
+        return $this->render('presentationBlank', [
+            'courses' => $items,
         ]);
     }
     
@@ -150,22 +160,6 @@ class ScheduleInfoController extends Controller
         ]);
     }
     
-    public function actionPresentationBlank($date = null)
-    {
-        $this->layout = 'blank';
-        $date = $date ? $date : date("Y-m-d");
-        $searchModel = new InfoCourseThemesSearch();
-        $searchModel->Date1 = $date;
-        
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        $dataProvider->pagination = false;
-        
-        return $this->render('presentationBlank', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    
     public function actionShow()
     {
         $searchModel = new InfoCourseThemesSearch();
@@ -180,10 +174,10 @@ class ScheduleInfoController extends Controller
         }
         foreach($items as $item) {
             if ($item->classroom) {
-                $classroom = $item->classroom->classroom;
+                $classroom = \yii\helpers\ArrayHelper::getValue(\app\models\Classroom::getList(), $item->classroom->classroom);
                 $url = ['schedule-info/update-class', 'id' => $item->classroom->id];
             } else {
-                $classroom = "0";
+                $classroom = "Не выбрана";
                 $url = [
                     'schedule-info/create-class',
                     'IDCourse' => $item->IDCourse,

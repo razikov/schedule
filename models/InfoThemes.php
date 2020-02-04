@@ -4,7 +4,7 @@ namespace app\models;
 use yii\db\ActiveRecord;
 use Yii;
 
-class InfoThemes extends ActiveRecord
+class InfoThemes extends InfoCommon
 {
     
     public function rules()
@@ -20,15 +20,10 @@ class InfoThemes extends ActiveRecord
             'Name' => Yii::t('app', 'Название'),
         ];
     }
-        
-    public static function getDb()
-    {
-        return \Yii::$app->get('schedule_info');
-    }
 
     public static function tableName()
     {
-        return '{{%themes}}';
+        return self::getDbName() . '.{{%themes}}';
     }
 
 }

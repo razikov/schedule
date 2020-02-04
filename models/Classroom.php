@@ -5,6 +5,7 @@ use yii\base\Model;
 
 class Classroom extends Model
 {
+    const OUTSIDE_ROOM = -1;
     
     public function rules()
     {
@@ -34,6 +35,7 @@ class Classroom extends Model
             413 => '413',
             424 => '424',
             425 => '425',
+            self::OUTSIDE_ROOM => 'На выезде',
         ];
     }
 

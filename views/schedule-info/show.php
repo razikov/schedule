@@ -4,12 +4,14 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use app\widgets\DatePicker;
 use yii\web\View;
+use app\assets\BootstrapSelectAsset;
 
 $this->title = 'Tests';
+BootstrapSelectAsset::register($this);
 $this->registerJs('
     bindModal(".js-show-modal", {
         beforeShow: function (_modal) {
-//            selectpicker(_modal);
+            $(".selectpicker", _modal).selectpicker();
         }
     });
 ');
@@ -47,7 +49,7 @@ $this->registerJs('
 </div>
 
 <?php
-$width = 900; // $startX + 60 * 13 (часов, количество отображаемых часов)
+$width = 930; // $startX + 60 * 13 (часов, количество отображаемых часов)
 //$height = 1500; // $headerY + 30 * $classroom * $n
 $height = 30 + $total * 30 + 30;
 $x = 10;
@@ -58,7 +60,7 @@ $timeToInt = function ($time) {
 };
 // 1 день = 1440 мин
 // с 8 до 20, это 12 часов, это 720 минут, 8 часов это 480 минут.
-$startX = 120;
+$startX = 150;
 $headerY = 30;
 ?>
 <svg version="1.1"

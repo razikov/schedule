@@ -64,6 +64,11 @@ $now = new DateTimeImmutable();
                             'visible' => !Yii::$app->user->isGuest,
                         ],
                         [
+                            'label' => \Yii::t('app', 'Расписание, встраиваемая'),
+                            'url' => ['/schedule-info/presentation-blank'],
+                            'visible' => !Yii::$app->user->isGuest,
+                        ],
+                        [
                             'label' => \Yii::t('app', 'Карта аудиторий'),
                             'url' => ['/schedule-info/show'],
                             'visible' => Yii::$app->user->can(User::SCHEDULE_CLASSROOM_MAP),

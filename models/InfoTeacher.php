@@ -5,7 +5,7 @@ use yii\db\ActiveRecord;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class InfoTeacher extends ActiveRecord
+class InfoTeacher extends InfoCommon
 {
     
     public function rules()
@@ -37,15 +37,10 @@ class InfoTeacher extends ActiveRecord
     {
         return sprintf("%s %s %s", $this->Surname, $this->Name, $this->Patronymic);
     }
-    
-    public static function getDb()
-    {
-        return \Yii::$app->get('schedule_info');
-    }
 
     public static function tableName()
     {
-        return '{{%teachers}}';
+        return self::getDbName() . '.{{%teachers}}';
     }
 
 }

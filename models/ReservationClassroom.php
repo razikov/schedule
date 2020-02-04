@@ -7,7 +7,7 @@ use DateTime;
 
 class ReservationClassroom extends ActiveRecord
 {
-    public $_theme;
+    public $_courseTheme;
 
     public function setCompositeKey($id_course, $id_order)
     {
@@ -19,9 +19,10 @@ class ReservationClassroom extends ActiveRecord
 //            throw "Тема курса не найдена";
             return null;
         } else {
-            $this->_theme = $courseThemes->theme;
+            $this->id_course = $id_course;
+            $this->id_order = $id_order;
+            $this->_courseTheme = $courseThemes;
         }
-        $this->id_theme = self::generateId($id_course, $id_order);
         $this->date_at = $courseThemes->Date1;
         $this->startTime = $courseThemes->time;
         $this->endTime = $courseThemes->endTime;
@@ -35,29 +36,27 @@ class ReservationClassroom extends ActiveRecord
     
     public function getCompositeKey()
     {
-        $value = explode('-', $this->id_theme);
         return [
-            'IDCourse' => $value[0],
-            'Order1' => isset($value[1]) ? $value[1] : null,
+            'IDCourse' => $this->id_course,
+            'Order1' => $this->id_order,
         ];
     }
     
     public function afterFind()
     {
-        $compositeKey = $this->getCompositeKey();
         $courseThemes = InfoCourseThemes::findOne([
-            'IDCourse' => $compositeKey['IDCourse'],
-            'Order1' => $compositeKey['Order1'],
+            'IDCourse' => $this->id_course,
+            'Order1' => $this->id_order,
         ]);
         if ($courseThemes) {
-            $this->_theme = $courseThemes->theme;
+            $this->_courseTheme = $courseThemes;
         }
     }
 
     public function rules()
     {
         return [
-            [['id_theme', 'classroom', 'date_at', 'time_start_at'], 'required'],
+            [['id_course', 'id_order', 'classroom', 'date_at', 'time_start_at'], 'required'],
         ];
     }
     
@@ -65,7 +64,8 @@ class ReservationClassroom extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', '#'),
-            'id_theme' => Yii::t('app', 'Занятие'),
+            'divisionName' => Yii::t('app', 'Подразделение'),
+            'courseName' => Yii::t('app', 'Курс'),
             'themeName' => Yii::t('app', 'Занятие'),
             'classroom' => Yii::t('app', 'Аудитория'),
             'date_at' => Yii::t('app', 'Дата'),
@@ -79,7 +79,17 @@ class ReservationClassroom extends ActiveRecord
     
     public function getThemeName()
     {
-        return \yii\helpers\ArrayHelper::getValue($this, ['_theme', 'Name'], 'Название темы не найдено');
+        return \yii\helpers\ArrayHelper::getValue($this, ['_courseTheme', 'theme', 'Name'], 'Название темы не найдено');
+    }
+    
+    public function getCourseName()
+    {
+        return \yii\helpers\ArrayHelper::getValue($this, ['_courseTheme', 'course', 'Name'], 'Название курса не найдено');
+    }
+    
+    public function getDivisionName()
+    {
+        return \yii\helpers\ArrayHelper::getValue($this, ['_courseTheme', 'course', 'division', 'Name'], 'Название структурного подразделения не найдено');
     }
     
     public function setDate($value)

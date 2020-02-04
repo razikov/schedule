@@ -4,7 +4,7 @@ namespace app\models;
 use yii\db\ActiveRecord;
 use Yii;
 
-class InfoCourseThemes extends ActiveRecord
+class InfoCourseThemes extends InfoCommon
 {
     private $_time;
     private $_duration;
@@ -54,10 +54,10 @@ class InfoCourseThemes extends ActiveRecord
     
     public function getClassroom()
     {
-        return ReservationClassroom::findOne([
-            'id_theme' => ReservationClassroom::generateId($this->IDCourse, $this->Order1)
-        ]);
-//        return $this->hasOne(ReservationClassroom::class, ['id_theme' => ReservationClassroom::generateId($this->IDCourse, $this->Order1)]);
+//        return ReservationClassroom::findOne([
+//            'id_theme' => ReservationClassroom::generateId($this->IDCourse, $this->Order1)
+//        ]);
+        return $this->hasOne(ReservationClassroom::class, ['id_course' => 'IDCourse', 'id_order' => 'Order1']);
     }
     
     public function getTime()
@@ -75,15 +75,10 @@ class InfoCourseThemes extends ActiveRecord
         $mins = $timeMins - ($hours * 60);
         return sprintf("%02d:%02d", $hours, $mins);
     }
-    
-    public static function getDb()
-    {
-        return \Yii::$app->get('schedule_info');
-    }
 
     public static function tableName()
     {
-        return '{{%coursethemes}}';
+        return self::getDbName() . '.{{%coursethemes}}';
     }
 
 }

@@ -5,7 +5,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use Yii;
 
-class InfoDivision extends ActiveRecord
+class InfoDivision extends InfoCommon
 {
     
     public function rules()
@@ -27,15 +27,10 @@ class InfoDivision extends ActiveRecord
         $query = static::find()->all();
         return ArrayHelper::map($query, 'ID', 'Name');
     }
-    
-    public static function getDb()
-    {
-        return \Yii::$app->get('schedule_info');
-    }
 
     public static function tableName()
     {
-        return '{{%divisions}}';
+        return self::getDbName() . '.{{%divisions}}';
     }
 
 }

@@ -72,6 +72,12 @@ class InfoCourseSearch extends InfoCourse
         return $query;
     }
     
+    public function getActualCourseThemes()
+    {
+        return $this->hasMany(InfoCourseThemes::class, ['IDCourse' => 'ID'])
+                ->andWhere(['Date1' => $this->date]);
+    }
+    
     public static function getDb()
     {
         return \Yii::$app->get('schedule_info');

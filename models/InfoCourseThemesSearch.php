@@ -47,7 +47,7 @@ class InfoCourseThemesSearch extends InfoCourseThemes
     
     public function getID()
     {
-        return sprintf("%s-%s-%s", $this->IDCourse, $this->IDTheme, $this->IDTeacher);
+        return sprintf("%s-%s", $this->IDCourse, $this->Order1);
     }
     
     public function setDateAt($value)
