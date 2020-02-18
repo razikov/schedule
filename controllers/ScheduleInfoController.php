@@ -21,15 +21,16 @@ class ScheduleInfoController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'except' => ['presentation-blank', 'presentation-course-blank'],
+                'except' => ['presentation-blank'],
                 'rules' => [
-                    ['actions' => ['presentation', 'presentation-course'], 'allow' => true, 'roles' => ["@"]],
-                    ['actions' => ['index', 'themes-modal', 'course-classroom-modal'], 'allow' => true, 'roles' => [User::SCHEDULE_COURSES_LIST]],
+                    ['actions' => ['presentation'], 'allow' => true, 'roles' => ["@"]],
+                    ['actions' => ['index', 'themes-modal'], 'allow' => true, 'roles' => [User::SCHEDULE_COURSES_LIST]],
                     ['actions' => ['themes'], 'allow' => true, 'roles' => [User::SCHEDULE_THEMES_LIST]],
                     ['actions' => ['show'], 'allow' => true, 'roles' => [User::SCHEDULE_CLASSROOM_MAP]],
-                    ['actions' => ['create-class', 'create-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_CREATE]],
-                    ['actions' => ['update-class', 'update-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_UPDATE]],
-                    ['actions' => ['delete-class', 'delete-ref-course-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_DELETE]],
+                    ['actions' => ['view-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_VIEW]],
+                    ['actions' => ['create-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_CREATE]],
+                    ['actions' => ['update-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_UPDATE]],
+                    ['actions' => ['delete-class'], 'allow' => true, 'roles' => [User::SCHEDULE_RESERVATION_DELETE]],
                 ],
             ],
         ];
@@ -82,27 +83,6 @@ class ScheduleInfoController extends Controller
         ])];
     }
     
-    public function actionCourseClassroomModal($courseId)
-    {
-        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
-        $course = InfoCourse::findOne(['ID' => $courseId]);
-        
-        if (!$course) {
-            throw new NotFoundHttpException();
-        } else {
-            $searchModel->id_course = $course->ID;
-        }
-        
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        $dataProvider->pagination = false;
-        
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        
-        return ['form' => $this->renderPartial('_modal_course_classroom', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ])];
-    }
     
     public function actionPresentation($dateAt = null)
     {
@@ -129,37 +109,6 @@ class ScheduleInfoController extends Controller
         ]);
     }
     
-    public function actionPresentationCourse($date = null)
-    {
-        $date = $date ? $date : date("Y-m-d");
-        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
-        $searchModel->date = $date;
-        
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        $dataProvider->pagination = false;
-        
-        return $this->render('presentationCourse', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    
-    public function actionPresentationCourseBlank($date = null)
-    {
-        $this->layout = 'blank';
-        $date = $date ? $date : date("Y-m-d");
-        $searchModel = new \app\models\ReferenceCourseClassroomSearch();
-        $searchModel->date = $date;
-        
-        $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
-        $dataProvider->pagination = false;
-        
-        return $this->render('presentationCourseBlank', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    
     public function actionShow()
     {
         $searchModel = new InfoCourseThemesSearch();
@@ -175,11 +124,16 @@ class ScheduleInfoController extends Controller
         foreach($items as $item) {
             if ($item->classroom) {
                 $classroom = \yii\helpers\ArrayHelper::getValue(\app\models\Classroom::getList(), $item->classroom->classroom);
-                $url = ['schedule-info/update-class', 'id' => $item->classroom->id];
+                $path = Yii::$app->user->can(User::SCHEDULE_RESERVATION_UPDATE) ? 'schedule-info/update-class' : 'schedule-info/view-class';
+                $url = [
+                    $path, 
+                    'id' => $item->classroom->id,
+                ];
             } else {
                 $classroom = "Не выбрана";
+                $path = Yii::$app->user->can(User::SCHEDULE_RESERVATION_CREATE) ? 'schedule-info/create-class' : 'schedule-info/view-class';
                 $url = [
-                    'schedule-info/create-class',
+                    $path,
                     'IDCourse' => $item->IDCourse,
                     'Order1' => $item->Order1,
                 ];
@@ -206,6 +160,28 @@ class ScheduleInfoController extends Controller
             'items' => $result,
             'total' => $total,
         ]);
+    }
+    
+    public function actionViewClass($id = null, $IDCourse = null, $Order1 = null)
+    {   
+        if ($IDCourse && $Order1) {
+            $model = new ReservationClassroom();
+            $flag = $model->setCompositeKey($IDCourse, $Order1);
+
+            if ($flag === null) {
+                throw new NotFoundHttpException();
+            }
+        }
+        if ($id) {
+            $model = ReservationClassroom::findOne($id);
+            
+            if (!$model) {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return ['form' => $this->renderPartial('_form_view_class', ['model' => $model])];
     }
     
     public function actionCreateClass($IDCourse, $Order1)
@@ -256,52 +232,4 @@ class ScheduleInfoController extends Controller
 //        return ['success' => (int)$model->delete(), 'errors' => Html::errorSummary($model)];
     }
     
-    public function actionCreateRefCourseClass($idCourse)
-    {   
-        $model = new ReferenceCourseClassroom();
-        $course = InfoCourse::findOne(['ID' => $idCourse]);
-        
-        if (!$course) {
-            throw new NotFoundHttpException();
-        } else {
-            $model->id_course = $course->ID;
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return ['model' => $model];
-        } else {
-            return ['form' => $this->renderPartial('_form_ref_course_class', ['model' => $model])];
-        }
-    }
-    
-    public function actionUpdateRefCourseClass($id)
-    {
-        $model = ReferenceCourseClassroom::findOne($id);
-        
-        if (!$model) {
-            throw new NotFoundHttpException();
-        }
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return ['model' => $model];
-        } else {
-            return ['form' => $this->renderPartial('_form_ref_course_class', ['model' => $model])];
-        }
-    }
-    
-    public function actionDeleteRefCourseClass($id, $returnUrl)
-    {
-        $model = ReferenceCourseClassroom::findOne($id);
-        
-        if (!$model) {
-            throw new NotFoundHttpException;
-        }
-        
-        $success = $model->delete();
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        return ['model' => $success ? null : $model];
-    }
-
 }

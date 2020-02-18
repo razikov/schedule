@@ -6,7 +6,7 @@ use app\widgets\DatePicker;
 use yii\web\View;
 use app\assets\BootstrapSelectAsset;
 
-$this->title = 'Tests';
+$this->title = 'Карта аудиторий';
 BootstrapSelectAsset::register($this);
 $this->registerJs('
     bindModal(".js-show-modal", {
@@ -94,7 +94,7 @@ $headerY = 30;
                 $y += 30;
             ?>
             <?= $rect ?>
-            <?= Html::a($text, $theme['url'], ['class' => 'js-show-modal', 'alt' => $theme['hint']]) ?>
+            <?= $theme['url'] ? Html::a($text, $theme['url'], ['class' => 'js-show-modal', 'alt' => $theme['hint']]) : $text ?>
         <?php endforeach; ?>
     <?php endforeach; ?>
     <?php

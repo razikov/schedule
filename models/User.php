@@ -22,6 +22,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     const ROLE_ADMIN = 'admin';
     const ROLE_ADMIN_SCHEDULE = 'admin-schedule';
+    const ROLE_USER_SCHEDULE = 'user-schedule';
 
     const USER_LIST = 'user-list';
     const USER_CREATE = 'user-create';
@@ -30,6 +31,7 @@ class User extends ActiveRecord implements IdentityInterface
     const SCHEDULE_COURSES_LIST = 'schedule-courses-list';
     const SCHEDULE_THEMES_LIST = 'schedule-themes-list';
     const SCHEDULE_CLASSROOM_MAP = 'schedule-classroom-map';
+    const SCHEDULE_RESERVATION_VIEW = 'schedule-reservation-view';
     const SCHEDULE_RESERVATION_CREATE = 'schedule-reservation-create';
     const SCHEDULE_RESERVATION_UPDATE = 'schedule-reservation-update';
     const SCHEDULE_RESERVATION_DELETE = 'schedule-reservation-delete';
@@ -101,6 +103,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             self::ROLE_ADMIN => \Yii::t('app', 'Администратор'),
             self::ROLE_ADMIN_SCHEDULE => \Yii::t('app', 'Администратор расписания'),
+            self::ROLE_USER_SCHEDULE => \Yii::t('app', 'Пользователь расписания'),
         ];
     }
 

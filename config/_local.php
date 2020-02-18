@@ -16,17 +16,10 @@ $config = [
             'password' => 'hexrf88',
             'charset' => 'utf8',
         ],
-//        'mailer' => [
-//            'class' => 'yii\swiftmailer\Mailer',
-//            'transport' => [
-//                'class' => 'Swift_SmtpTransport',
-//                'host' => 'localhost',
-//                'username' => 'username',
-//                'password' => 'password',
-//                'port' => '587',
-//                'encryption' => 'tls',
-//            ],
-//        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => true,
+        ],
     ],
 ];
 

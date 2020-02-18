@@ -31,6 +31,8 @@ class RbacController extends Controller
         $auth->add($scheduleThemesList);
         $scheduleClassroomMap = $auth->createPermission(User::SCHEDULE_CLASSROOM_MAP);
         $auth->add($scheduleClassroomMap);
+        $scheduleReservationView = $auth->createPermission(User::SCHEDULE_RESERVATION_VIEW);
+        $auth->add($scheduleReservationView);
         $scheduleReservationCreate = $auth->createPermission(User::SCHEDULE_RESERVATION_CREATE);
         $auth->add($scheduleReservationCreate);
         $scheduleReservationUpdate = $auth->createPermission(User::SCHEDULE_RESERVATION_UPDATE);
@@ -44,6 +46,9 @@ class RbacController extends Controller
         $adminSchedule = $auth->createRole(User::ROLE_ADMIN_SCHEDULE);
         $adminSchedule->ruleName = 'RoleRule';
         $auth->add($adminSchedule);
+        $userSchedule = $auth->createRole(User::ROLE_USER_SCHEDULE);
+        $userSchedule->ruleName = 'RoleRule';
+        $auth->add($userSchedule);
         
         $auth->addChild($admin, $createUser);
         $auth->addChild($admin, $updateUser);
@@ -51,6 +56,7 @@ class RbacController extends Controller
         $auth->addChild($admin, $scheduleCoursesList);
         $auth->addChild($admin, $scheduleThemesList);
         $auth->addChild($admin, $scheduleClassroomMap);
+        $auth->addChild($admin, $scheduleReservationView);
         $auth->addChild($admin, $scheduleReservationCreate);
         $auth->addChild($admin, $scheduleReservationUpdate);
         $auth->addChild($admin, $scheduleReservationDelete);
@@ -58,9 +64,15 @@ class RbacController extends Controller
         $auth->addChild($adminSchedule, $scheduleCoursesList);
         $auth->addChild($adminSchedule, $scheduleThemesList);
         $auth->addChild($adminSchedule, $scheduleClassroomMap);
+        $auth->addChild($adminSchedule, $scheduleReservationView);
         $auth->addChild($adminSchedule, $scheduleReservationCreate);
         $auth->addChild($adminSchedule, $scheduleReservationUpdate);
         $auth->addChild($adminSchedule, $scheduleReservationDelete);
+        
+        $auth->addChild($userSchedule, $scheduleCoursesList);
+        $auth->addChild($userSchedule, $scheduleThemesList);
+        $auth->addChild($userSchedule, $scheduleClassroomMap);
+        $auth->addChild($userSchedule, $scheduleReservationView);
         
         $roles = array_keys($auth->getRoles());
         file_put_contents(\Yii::getAlias('@app/rbac/roles.php'), "<?php\n\nreturn " . \yii\helpers\VarDumper::export($roles) . ";\n");

@@ -43,7 +43,7 @@ class InfoCourseSearch extends InfoCourse
     
     public function setDateAt($value)
     {
-        $this->date = DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d');
+        $this->date = $value ? DateTime::createFromFormat('d.m.Y', $value)->format('Y-m-d') : null;
         return $this;
     }
     

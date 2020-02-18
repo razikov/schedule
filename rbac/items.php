@@ -18,6 +18,9 @@ return [
     'schedule-classroom-map' => [
         'type' => 2,
     ],
+    'schedule-reservation-view' => [
+        'type' => 2,
+    ],
     'schedule-reservation-create' => [
         'type' => 2,
     ],
@@ -37,6 +40,7 @@ return [
             'schedule-courses-list',
             'schedule-themes-list',
             'schedule-classroom-map',
+            'schedule-reservation-view',
             'schedule-reservation-create',
             'schedule-reservation-update',
             'schedule-reservation-delete',
@@ -49,9 +53,20 @@ return [
             'schedule-courses-list',
             'schedule-themes-list',
             'schedule-classroom-map',
+            'schedule-reservation-view',
             'schedule-reservation-create',
             'schedule-reservation-update',
             'schedule-reservation-delete',
+        ],
+    ],
+    'user-schedule' => [
+        'type' => 1,
+        'ruleName' => 'RoleRule',
+        'children' => [
+            'schedule-courses-list',
+            'schedule-themes-list',
+            'schedule-classroom-map',
+            'schedule-reservation-view',
         ],
     ],
 ];

@@ -8,7 +8,7 @@ use app\assets\JqueryDatePickerAsset;
 use yii\helpers\Json;
 use yii\web\View;
 
-$this->title = 'Tests';
+$this->title = 'Расписание занятий ГОАУ ЯО ИРО';
 $formatter = Yii::$app->formatter;
 JqueryDatePickerAsset::register($this);
 $params = Json::encode([

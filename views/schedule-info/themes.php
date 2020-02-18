@@ -10,7 +10,7 @@ use app\widgets\Select;
 use app\widgets\DatePicker;
 use app\models\User;
 
-$this->title = 'Tests';
+$this->title = 'Список занятий';
 $this->registerJs('
     bindModal(".js-show-modal", {
         beforeShow: function (_modal) {

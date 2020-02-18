@@ -26,6 +26,7 @@ $config = [
                 'port' => '587',
                 'encryption' => 'tls',
             ],
+            'useFileTransport' => true,
         ],
     ],
 ];
