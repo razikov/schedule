@@ -9,14 +9,16 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
+use app\assets\DragscrollAsset;
 
 AppAsset::register($this);
+DragscrollAsset::register($this);
 $formatter = Yii::$app->formatter;
 $now = new DateTimeImmutable();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?= Yii::$app->language ?>" class="dragscroll">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">

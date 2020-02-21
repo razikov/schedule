@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap-select": "^1.13.12",
+    "dragscroll": "^0.0.8",
     "jquery-datetimepicker": "^2.5.21"
   }
 }
