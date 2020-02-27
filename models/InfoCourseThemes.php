@@ -13,8 +13,8 @@ class InfoCourseThemes extends InfoCommon
     public function afterFind()
     {
         $this->_time = floor($this->Time1 / 6000); // мс в минуте
-//        $this->_duration = ($this->LectureHours * 0.45 + $this->PracticalHours * 0.45) * 60;
-        $this->_duration = ($this->LectureHours + $this->PracticalHours) * 60;
+        $this->_duration = ($this->LectureHours + $this->PracticalHours) * 45;
+//        $this->_duration = ($this->LectureHours + $this->PracticalHours) * 60;
 //        $this->classroom = ReservationClassroom::findOne([
 //            'id_theme' => ReservationClassroom::generateId($this->IDCourse, $this->Order1),
 //        ]);

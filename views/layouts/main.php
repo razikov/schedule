@@ -9,16 +9,14 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
-use app\assets\DragscrollAsset;
 
 AppAsset::register($this);
-DragscrollAsset::register($this);
 $formatter = Yii::$app->formatter;
 $now = new DateTimeImmutable();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="dragscroll">
+<html lang="<?= Yii::$app->language ?>" class="">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -60,11 +58,6 @@ $now = new DateTimeImmutable();
                             'url' => ['/schedule-info/presentation'],
                             'visible' => !Yii::$app->user->isGuest,
                         ],
-//                        [
-//                            'label' => \Yii::t('app', 'Расписание, встраиваемая'),
-//                            'url' => ['/schedule-info/presentation-blank'],
-//                            'visible' => !Yii::$app->user->isGuest,
-//                        ],
                         [
                             'label' => \Yii::t('app', 'Карта аудиторий'),
                             'url' => ['/schedule-info/show'],

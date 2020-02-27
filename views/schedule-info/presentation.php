@@ -55,8 +55,15 @@ $this->registerJs("$('#dateAt').datetimepicker({$params});", View::POS_READY);
             <div class="panel-heading" role="tab" id="<?= 'heading-' . $cid ?>">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#<?= 'collapse-' . $cid ?>" aria-expanded="true" aria-controls="<?= 'collapse-' . $cid ?>">
-                        <strong><?= $course['courseName'] ?></strong> <?= $course['out'] ?><br>
-                        <span style="font-size: 0.9em; font-style: italic">Подразделение: <?= $course['divisionName'] ?></span><br>
+                        <div class="media">
+                            <div class="media-left">
+                                <span style="font-size: 2em;" class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
+                            </div>
+                            <div class="media-body">
+                                <strong><?= $course['courseName'] ?></strong> <?= $course['out'] ?><br>
+                                <span style="font-size: 0.9em; font-style: italic"><?= $course['divisionName'] ?></span><br>
+                            </div>
+                        </div>
                     </a>
                 </h4>
             </div>

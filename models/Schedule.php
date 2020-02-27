@@ -58,7 +58,8 @@ class Schedule
             $item->key = $key;
             
             $_time = floor($item->Time1 / 6000); // мс в минуте
-            $_duration = ($item->LectureHours + $item->PracticalHours) * 60;
+//            $_duration = ($item->LectureHours + $item->PracticalHours) * 60;
+            $_duration = ($item->LectureHours + $item->PracticalHours) * 45;
             $item->time = $getTime($_time);
             $item->endTime = $getEndTime($_time, $_duration);
             if (!isset($items[$item->cid])) {

@@ -6,6 +6,8 @@ use yii\base\Model;
 class Classroom extends Model
 {
     const OUTSIDE_ROOM = -1;
+    const WITHOUT_ROOM = 'without';
+    const BIBLIO_ROOM = 'biblio';
     
     public function rules()
     {
@@ -25,7 +27,7 @@ class Classroom extends Model
             303 => '303',
             311 => '311',
             323 => '323',
-            'biblio' => 'Читальный зал',
+            self::BIBLIO_ROOM => 'Читальный зал',
 //            404 => '404',
             406 => '406',
             407 => '407',
@@ -37,6 +39,7 @@ class Classroom extends Model
             413 => '413',
             424 => '424',
             425 => '425',
+            self::WITHOUT_ROOM => '-',
             self::OUTSIDE_ROOM => 'На выезде',
         ];
     }
